@@ -1,16 +1,20 @@
 const Router = require('koa-router')
 const router = new Router()
-const { HttpException, ParameterException } = require('../../../core/http-exception')
+const { PositiveIntegerValidator } = require('../../validators/validator')
 
-router.post('/v1/classic/latest/:id', (ctx, next) => {
-  const query = ctx.request.query
-  const param = ctx.params
-  if (Object.keys(query).length == 0) {
-    throw new HttpException('缺少了query参数啊', 1000, 400)
-  }
-  if (true) {
-    throw new ParameterException('没有传param啊')
-  }
+router.post('/v1/classic/latest/:id', async(ctx, next) => {
+  // const param = ctx.params
+  // const query = ctx.request.query
+  // const body = ctx.request.body
+  // const header = ctx.request.header
+  // if (Object.keys(query).length == 0) {
+  //   throw new global.errs.ParameterException()
+  // }
+
+  const v = new PositiveIntegerValidator()
+  await v.validate(ctx)//如果这里是跑出的异常下面代码不会执行
+  const id = v.get('path.id')
+
   ctx.body = '恭喜你成功了'
   // throw new Error('api exception')
 })
