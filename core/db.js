@@ -9,10 +9,18 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
     define: {
         timestamps: true,//自动生成 createTime和updateTime
         paranoid: true,//自动生成 deleteTime
-        // createdAt: 'created_at',//自定义这些字段名
-        // updatedAt: 'updated_at',
-        // deletedAt: 'deleted_at',
-        // underscored: true,//自动将驼峰写法转换为下划线，看个人习惯设置
+        createdAt: 'created_at',//自定义这些字段名
+        updatedAt: 'updated_at',
+        deletedAt: 'deleted_at',
+        underscored: true,//自动将驼峰写法转换为下划线，看个人习惯设置
+        //!确定一种命名方式后不要改动，否则会引起数据库查询错误
+        scopes: {//相当于定义一个查询模板，在需要时引用即可
+            scp: {
+                attributes: {
+                    exclude: ['updated_at', 'deleted_at', 'created_at']
+                }
+            }
+        }
     }
 })
 

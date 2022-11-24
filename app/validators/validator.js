@@ -2,6 +2,7 @@
 
 const { LinValidator, Rule } = require("../../core/lin-validator");
 const { User } = require("../models/user");
+const { LoginType, ArtType } = require('../lib/enum')
 
 class PositiveIntegerValidator extends LinValidator {
   constructor() {
@@ -35,5 +36,65 @@ class RegisterValidator extends LinValidator {
     if (user) { throw new Error('该邮箱已被使用') }
   }
 }
+class TokenValidator extends LinValidator {
+  constructor() {
+    super();
+    this.account = [new Rule('isLength', '不符合账号规则', { min: 4, max: 32 })]
+    this.secret = [
+      new Rule("isOptional"),
+      new Rule('isLength', '不符合账号规则', { min: 4, max: 32 })
+    ]
+  }
+  validateLoginType(vals) {
+    if (!LoginType.isThisType(vals.body.type)) {
+      throw new Error('type参数不合法')
+    }
+  }
+}
 
-module.exports = { PositiveIntegerValidator, RegisterValidator }
+class NotEmptyValidator extends LinValidator {
+  constructor(msg = '不允许为空') {
+    super()
+    this.token = [new Rule('isLength', msg, { min: 1 })]
+  }
+}
+//检查登录的类型
+
+
+class Checker {
+  constructor(type) {
+    this.checker = type
+  }
+
+  check = (vals)=> {
+    let type = vals.body.type || vals.path.type
+    if (!type) {
+      throw new Error('type是必须参数')
+    }
+    type = parseInt(type)
+    if (!this.checker.isThisType(type)) {
+      throw new Error('type参数不合法')
+    }
+  }
+}
+
+class LikeValidator extends LinValidator {
+  constructor() {
+    super()
+    this.art_id = [new Rule("isInt", "需要是正整数", { min: 1 })];
+    const checker = new Checker(ArtType)//type有两种，这里表示要校验是期刊的type
+    this.validateType = checker.check
+  }
+}
+class ClassicValidator extends LikeValidator {
+
+}
+
+module.exports = {
+  PositiveIntegerValidator,
+  RegisterValidator,
+  TokenValidator,
+  NotEmptyValidator,
+  LikeValidator,
+  ClassicValidator
+}

@@ -53,15 +53,15 @@ const findMembers = function (instance, {
     return _find(instance)
 }
 
-const generateToken = function(uid, scope){
-    const secretKey = global.config.security.secretKey
-    const expiresIn = global.config.security.expiresIn
-    const token = jwt.sign({
-        uid,
-        scope
-    },secretKey,{
-        expiresIn
-    })
+//生成jwt令牌
+const generateToken = function (uid, scope) {
+    const secretKey = process.env.SECRETKEY//令牌的key
+    const expiresIn = process.env.EXPIRESIN//令牌过期的时间
+    const token = jwt.sign(
+        { uid, scope },
+        secretKey,
+        { expiresIn }
+    )
     return token
 }
 

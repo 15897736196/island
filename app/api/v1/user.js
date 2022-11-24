@@ -3,7 +3,8 @@ const router = new Router({
     prefix: '/v1/user'//当前router实例上的api都共有的前缀
 })
 const { RegisterValidator } = require('../../validators/validator')
-const { User } = require('../../models/user')
+const { User } = require('@models/user')
+const { success } = require('../../lib/helper')
 //接受参数？
 router.post('/register', async (ctx) => {
     const v = new RegisterValidator()
@@ -15,8 +16,8 @@ router.post('/register', async (ctx) => {
         nickname: v.get('body.nickname'),
     }
 
-    const r = await User.create(user)
-    console.log("🚀 ~ file: user.js ~ line 18 ~ router.post ~ r", r)
+    await User.create(user)
+    success('创建用户成功')
 })
 
 module.exports = router
