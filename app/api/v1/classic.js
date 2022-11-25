@@ -10,7 +10,7 @@ const { Favor } = require('@models/favor')
 const { PositiveIntegerValidator, ClassicValidator } = require('../../validators/validator')
 const { NotFound } = require('../../../core/http-exception')
 
-router.get('/latest', new Auth(userLevel.ordinary_user).m, async (ctx, next) => {
+router.get('/latest', new Auth(8).m, async (ctx, next) => {
   // const param = ctx.params
   // const query = ctx.request.query
   // const body = ctx.request.body
@@ -56,15 +56,26 @@ router.get('/:type/:id/favor', new Auth(8).m, async ctx => {
   const v = await new ClassicValidator().validate(ctx, { art_id: 'id' })
   const id = v.get('path.id')
   const type = v.get('path.type')
-
-  const msg = await Art.getArtDetailById(id, type, ctx)
-  ctx.body = msg
+  const { fav_nums, like_status } = await Art.getArtDetailById(id, type, ctx)
+  ctx.body = {
+    fav_nums,
+    like_status,
+  }
 })
 
 //查询某一期刊的点赞数量和用户是否点赞过
 router.get('/favor', new Auth(8).m, async ctx => {
   const uid = ctx.auth.uid
   const msg = await Favor.getMyClassicFavors(uid)
+  ctx.body = msg
+})
+
+//获取某一期刊的详情信息(完整信息)
+router.get('/:type/:id', new Auth(8).m, async ctx => {
+  const v = await new ClassicValidator().validate(ctx, { art_id: 'id' })
+  const id = v.get('path.id')
+  const type = v.get('path.type')
+  const msg = await Art.getArtDetailById(id, type, ctx)
   ctx.body = msg
 })
 

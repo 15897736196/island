@@ -17,7 +17,7 @@ class Auth {
             //此处和前端约定在http的basicauth的! name 中传递token
             const userToken = basicAuth(ctx.req)//ctx.req是nodejs原生的request对象
             if(!userToken || !userToken.name){
-                throw new Forbidden()
+                throw new Forbidden('令牌过期','',403)
             }
             try{
                 var decode = jwt.verify(userToken.name,process.env.SECRETKEY)

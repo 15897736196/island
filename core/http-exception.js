@@ -33,9 +33,9 @@ class NotFound extends HttpException {
   }
 }
 class Forbidden extends HttpException {
-  constructor(msg = '禁止访问', errorCode = 10006) {
+  constructor(msg = '禁止访问', errorCode = 10006, code) {
     super()
-    this.code = 404
+    this.code = code || 404 
     this.msg = msg
     this.errorCode = errorCode
   }

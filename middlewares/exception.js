@@ -7,7 +7,10 @@ const catchError = async (ctx, next) => {
     // if(global.config.env === 'dev'){ throw err }else{ console.log}
     const isHttpException = err instanceof HttpException
     const isDev = process.env.ENV === 'dev'
-    if (!isDev && isHttpException) { throw err }
+    if (!isDev && isHttpException) {
+      console.log(err)
+      throw new Error(err)
+    }
     if (isHttpException) {
       ctx.body = {
         msg: err.msg,
@@ -16,6 +19,7 @@ const catchError = async (ctx, next) => {
       }
       ctx.status = err.code
     } else {
+      console.log(err)
       ctx.body = {
         msg: 'we made mistake (X.X)~',
         errorCode: 999,

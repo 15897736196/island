@@ -1,3 +1,5 @@
+const { unset, clone, isArray } = require('lodash');
+const { Model } = require('sequelize');
 const Sequelize = require('sequelize')
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
@@ -37,5 +39,28 @@ connect()
 
 sequelize.sync({ force: false })
 //force为true会自动检擦模型是否改变，但是会删除原有的表数据，生产环境一定要设为false
+
+// 序列化
+Model.prototype.toJSON = function () {
+    data = clone(this.dataValues)
+    unset(data, 'updated_at')
+    unset(data, 'created_at')
+    unset(data, 'deleted_at')
+
+    for(key in data){
+        if(key === 'image'){
+            if(!data[key].startsWith('http'))
+            data[key] = process.env.HOST + data[key]
+        }
+    }
+
+    if (isArray(this.exclude)) {
+        this.exclude.forEach(val => {
+            unset(data, val)
+        })
+    }
+    
+    return data
+}
 
 module.exports = { sequelize }

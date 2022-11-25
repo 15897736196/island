@@ -3,10 +3,15 @@ const { Sequelize, Model } = require('sequelize')
 const { sequelize } = require('../../core/db')
 
 const commonFiled = {
-    image: Sequelize.STRING,
+    image: {
+        type: Sequelize.STRING,
+    },
     content: Sequelize.STRING,
     pubdate: Sequelize.DATEONLY,
-    fav_nums: Sequelize.INTEGER,
+    fav_nums:{
+        type:  Sequelize.INTEGER,
+        defaultValue: 0
+    },
     title: Sequelize.STRING,
     type: Sequelize.TINYINT
 }

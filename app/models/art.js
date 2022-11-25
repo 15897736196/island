@@ -4,6 +4,7 @@ const { NotFound } = require('../../core/http-exception')
 const { Movie, Sentence, Music } = require('./classic')
 const { Favor } = require('./favor')
 const { Flow } = require('./flow')
+// const { HotBook } = require('./hot-book')
 
 class Art {
     static async getList(artInfoList) {
@@ -14,7 +15,7 @@ class Art {
             300: []
         }
         artInfoList.forEach(val => {
-            if (Object.keys(artInfoObj).includes(val.type+'')) {
+            if (Object.keys(artInfoObj).includes(val.type + '')) {
                 artInfoObj[val.type].push(val.art_id)
             }
         })
@@ -73,10 +74,27 @@ class Art {
                 art = await Sentence.scope('scp').findOne({ where })
                 break
             case 400:
+                const { Book } = require('./book')
+                art = await Book.scope('scp').findOne({ where })
+                if(!art){
+                    art = await Book.create({
+                        id: art_id,
+                    })
+                }
                 break
             default:
                 break
         }
+        //在源头上保证图片返回的地址是一个完整的url来访问服务器的静态资源
+        //如 http://localhost:3000/images/movie.8.png
+        //关于静态资源，可以放置在本服务目录下，
+        //也可以专门使用另一台服务器来专门管理存储静态资源 微服务 需要带宽足够
+        //或者使用云服务， oss 贵 esc rds oss
+        //或是使用 github gitpage 但只有300mb
+        // if(art && art.image){
+        //     let imgUrl = art.dataValues.image
+        //     art.dataValues.image = process.env.HOST + imgUrl
+        // }
         return art
     }
 
@@ -104,8 +122,9 @@ class Art {
             throw new NotFound('未找到期刊')
         }
         return {
+            ...art.dataValues,
             fav_nums: art.fav_nums,
-            like_status: likeOrNot
+            like_status: likeOrNot,
         }
     }
 }
