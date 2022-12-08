@@ -79,7 +79,7 @@ class Art {
                 if(!art){
                     art = await Book.create({
                         id: art_id,
-                    })
+                    })  
                 }
                 break
             default:
@@ -121,11 +121,13 @@ class Art {
         if (!art) {
             throw new NotFound('未找到期刊')
         }
-        return {
-            ...art.dataValues,
-            fav_nums: art.fav_nums,
-            like_status: likeOrNot,
-        }
+        art.setDataValue('like_status',likeOrNot)
+        return art
+        // return {
+        //     ...art.dataValues,//!不能直接这样做，这样会导致我们设置的序列化方法无法格式化图片路径！
+        //     fav_nums: art.fav_nums,
+        //     like_status: likeOrNot,
+        // }
     }
 }
 

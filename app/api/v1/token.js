@@ -5,7 +5,6 @@ const router = new Router({
 const { TokenValidator, NotEmptyValidator } = require('../../validators/validator')
 const { User } = require('@models/user')
 
-// const { success } = require('../../lib/helper')
 const { LoginType } = require('../../lib/enum')
 const { generateToken } = require('../../../core/util')
 const { Auth } = require('../../../middlewares/auth')

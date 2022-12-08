@@ -1,4 +1,4 @@
-const { unset, clone, isArray } = require('lodash');
+const { unset, clone, isArray, forEach } = require('lodash');
 const { Model } = require('sequelize');
 const Sequelize = require('sequelize')
 
@@ -48,10 +48,16 @@ Model.prototype.toJSON = function () {
     unset(data, 'deleted_at')
 
     for(key in data){
+        //如果数据库字段中是image
         if(key === 'image'){
             if(!data[key].startsWith('http'))
-            data[key] = process.env.HOST + data[key]
+            data[key] = process.env.HOST + data[key].replace('images/','')
         }
+        // else if(isArray(data[key])){
+        //     data[key].forEach(val=>{
+        //         val.image && (val.image = process.env.HOST + val.image)
+        //     })
+        // }
     }
 
     if (isArray(this.exclude)) {

@@ -16,14 +16,6 @@ class ParameterException extends HttpException {
   }
 }
 
-class Success extends HttpException {
-  constructor(msg = 'OK', errorCode = 0) {
-    super()
-    this.code = 201
-    this.msg = msg
-    this.errorCode = errorCode
-  }
-}
 class NotFound extends HttpException {
   constructor(msg = '信息未被找到', errorCode = 10004) {
     super()
@@ -35,7 +27,7 @@ class NotFound extends HttpException {
 class Forbidden extends HttpException {
   constructor(msg = '禁止访问', errorCode = 10006, code) {
     super()
-    this.code = code || 404 
+    this.code = code || 404
     this.msg = msg
     this.errorCode = errorCode
   }
@@ -49,10 +41,9 @@ class likeError extends HttpException {
   }
 }
 
-module.exports = { 
+module.exports = {
   HttpException,
   ParameterException,
-  Success,
   NotFound,
   Forbidden,
   likeError

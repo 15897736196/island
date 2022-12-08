@@ -56,7 +56,7 @@ router.get('/:type/:id/favor', new Auth(8).m, async ctx => {
   const v = await new ClassicValidator().validate(ctx, { art_id: 'id' })
   const id = v.get('path.id')
   const type = v.get('path.type')
-  const { fav_nums, like_status } = await Art.getArtDetailById(id, type, ctx)
+  const { dataValues: {fav_nums, like_status} } = await Art.getArtDetailById(id, type, ctx)
   ctx.body = {
     fav_nums,
     like_status,

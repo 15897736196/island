@@ -5,7 +5,6 @@ const { Favor } = require('../../models/favor');
 const { HotBook } = require('../../models/hot-book');
 const { Comment } = require('../../models/book-comment');
 const { PositiveIntegerValidator, SearchValidator, AddShortCommentValidator } = require('../../validators/validator');
-const { success } = require('../../lib/helper')
 const router = new Router({
   prefix: '/v1/book'
 });
@@ -53,7 +52,10 @@ router.post('/add/short_comment', new Auth(8).m, async ctx => {
   const book_id = v.get('body.book_id')
   const content = v.get('body.content')
   await Comment.addComment(book_id, content)
-  success('评论成功')
+  ctx.body = {
+    code: 200,
+    message: '评论成功'
+  }
 })
 
 //获取短评

@@ -4,7 +4,6 @@ const router = new Router({
 })
 const { RegisterValidator } = require('../../validators/validator')
 const { User } = require('@models/user')
-const { success } = require('../../lib/helper')
 //接受参数？
 router.post('/register', async (ctx) => {
     const v = new RegisterValidator()
@@ -17,7 +16,10 @@ router.post('/register', async (ctx) => {
     }
 
     await User.create(user)
-    success('创建用户成功')
+    ctx.body= {
+        msg: '创建用户成功',
+        code: 200
+    }
 })
 
 module.exports = router
